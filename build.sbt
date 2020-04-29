@@ -110,25 +110,12 @@ lazy val micrositeSettings = Seq(
     "gray-lighter" -> "#F4F3F4",
     "white-color" -> "#FFFFFF"
   ),
-  fork in tut := true,
-  scalacOptions in Tut --= Seq(
-    "-Xfatal-warnings",
-    "-Ywarn-unused-import",
-    "-Ywarn-numeric-widen",
-    "-Ywarn-dead-code",
-    "-Ywarn-unused:imports",
-    "-Xlint:-missing-interpolator,_"
-  ),
-  libraryDependencies += "com.47deg" %% "github4s" % "0.20.1",
-  micrositePushSiteWith := GitHub4s,
-  micrositeGithubToken := sys.env.get("GITHUB_TOKEN")
 )
 
 lazy val noPublishSettings = {
   Seq(
     publish := {},
     publishLocal := {},
-    publishSigned := {},
     publishArtifact := false
   )
 }

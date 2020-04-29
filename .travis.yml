@@ -1,7 +1,12 @@
 sudo: false
 language: scala
 
-scala_211: &scala_211 2.11.12
+jdk:
+  - openjdk8
+
+os: linux
+dist: xenial
+
 scala_212: &scala_212 2.12.11
 scala_213: &scala_213 2.13.2
 
@@ -15,8 +20,6 @@ cache:
     - $HOME/.coursier/cache
     - $HOME/.sbt
 
-jdk:
-  - openjdk8
 
 before_install:
   - export PATH=${PATH}:./vendor/bundle
