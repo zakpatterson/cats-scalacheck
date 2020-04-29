@@ -1,7 +1,12 @@
 sudo: false
 language: scala
 
-scala_211: &scala_211 2.11.12
+jdk:
+  - openjdk8
+
+os: linux
+dist: xenial
+
 scala_212: &scala_212 2.12.11
 scala_213: &scala_213 2.13.2
 
@@ -15,8 +20,6 @@ cache:
     - $HOME/.coursier/cache
     - $HOME/.sbt
 
-jdk:
-  - openjdk8
 
 before_install:
   - export PATH=${PATH}:./vendor/bundle
@@ -30,7 +33,10 @@ install:
 stages:
   - name: test
   - name: doc-deploy
-    if: "((branch = master AND type = push) OR (tag IS present)) AND NOT fork"
+    if: "((branch = master AND type = push) OR (tag IS present)) AND (NOT fork OR env(DEPLOY) = true)"
+  - name: release
+    if: "((branch = master AND type = push) OR (tag IS present)) AND (NOT fork OR env(DEPLOY) = true)"
+
 
 jobs:
   include:
@@ -55,3 +61,5 @@ jobs:
       scala: *scala_212
       script:
         - sbt ++$TRAVIS_SCALA_VERSION docs/publishMicrosite
+    - stage: release
+      script: sbt "set organization in ThisBuild := \"${DEPLOY_ORG:-io.christopherdavenport}\"; ci-release"
