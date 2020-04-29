@@ -30,7 +30,10 @@ install:
 stages:
   - name: test
   - name: doc-deploy
-    if: "((branch = master AND type = push) OR (tag IS present)) AND NOT fork"
+    if: "((branch = master AND type = push) OR (tag IS present)) AND (NOT fork OR env(DEPLOY) = true)"
+  - name: release
+    if: "((branch = master AND type = push) OR (tag IS present)) AND (NOT fork OR env(DEPLOY) = true)"
+
 
 jobs:
   include:
@@ -55,3 +58,5 @@ jobs:
       scala: *scala_212
       script:
         - sbt ++$TRAVIS_SCALA_VERSION docs/publishMicrosite
+    - stage: release
+      script: sbt "set organization in ThisBuild := \"${DEPLOY_ORG:-io.christopherdavenport}\"; ci-release"
